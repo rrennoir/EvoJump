@@ -17,8 +17,15 @@ def main():
 
     clock = pg.time.Clock()
 
+    # Create player rect.
+    player_size = 20
+    player_rect = pg.Rect(width / 2, height / 2, player_size, player_size)
+
     obstacle_rect_list = []
     tick = 0
+    in_jump = False 
+    jump_tick = 0
+    obstacle_tick = 0
     play = True
     while play:
 
@@ -31,19 +38,34 @@ def main():
                 play = False
                 pg.quit()
                 quit()
+        
+        if in_jump:
+            jump_tick -= 1
+            if jump_tick == 0:
+                player_rect = player_rect.move(0, 50)
+                in_jump = False
+
+        # If SPACE is pressed made the jump.
+        if keys[pg.K_SPACE] and not in_jump:
+            player_rect = player_rect.move(0, -50)
+            in_jump = True
+            jump_tick = 90
 
         # Spawn a obstacle every seconde just out side of the screen.
-        if tick == 60:
+        if obstacle_tick == 3:
+
+            obstacle_tick = 0
             obstacle_rect = pg.Rect(width, height / 2, 20, 20)
             obstacle_rect_list.append(obstacle_rect)
 
-        # Update obstacle position.
+        # Update obstacle position and check for colision with the player.
         for index, obstacle_rect in enumerate(obstacle_rect_list):
+            if obstacle_rect.colliderect(player_rect):
+                print("LOST")
+                return
             obstacle_rect_list[index] = obstacle_rect.move(-1, 0)
 
         # Draw player on the middle of the screen.
-        player_size = 20
-        player_rect = pg.Rect(width / 2, height / 2, player_size, player_size)
         pg.draw.rect(screen, (255, 255, 255), player_rect)
 
         # Draw obstacle.
@@ -57,7 +79,9 @@ def main():
         # Count tick.
         if tick > 60:
             tick = 0
+            obstacle_tick += 1
 
+            
         tick += 1
 
         # Set the game to 60 update per second.
