@@ -1,0 +1,7 @@
+{
+    "python.linting.pylintEnabled": true,
+    "python.pythonPath": "C:\\Users\\ryanr\\Anaconda3\\python.exe",
+    "python.linting.pylintArgs":[
+        "--extension-pkg-whitelist=pygame"
+    ]
+}
