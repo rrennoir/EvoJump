@@ -23,7 +23,7 @@ def main():
 
     obstacle_rect_list = []
     tick = 0
-    in_jump = False 
+    in_jump = False
     jump_tick = 0
     obstacle_tick = 0
     play = True
@@ -38,7 +38,7 @@ def main():
                 play = False
                 pg.quit()
                 quit()
-        
+
         if in_jump:
             jump_tick -= 1
             if jump_tick == 0:
@@ -80,8 +80,6 @@ def main():
         if tick > 60:
             tick = 0
             obstacle_tick += 1
-
-            
         tick += 1
 
         # Set the game to 60 update per second.
