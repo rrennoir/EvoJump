@@ -1,6 +1,5 @@
 import pygame as pg # au lieu de mettre pygame on met pg pour court et rapide
 
-
 def main():
 
     # init pygame, importez chaque module dans pygame.
