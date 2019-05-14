@@ -1,23 +1,23 @@
-import pygame as pg
+import pygame as pg # au lieu de mettre pygame on met pg pour court et rapide
 
 
 def main():
 
-    # init pygame, import every module in pygame.
+    # init pygame, importez chaque module dans pygame.
     pg.init()
 
-    # Setup window of 500 by 400 pixel.
+    # Fenêtre de 500 par 400 pixels.
     width = 500
     height = 400
     display_size = [width, height]
     screen = pg.display.set_mode(display_size)
 
-    # Set the windows title
+    # Définir le titre de la fenêtre
     pg.display.set_caption("Jump")
 
     clock = pg.time.Clock()
 
-    # Create player rect.
+    # Créer un joueur rect = rectangle
     player_size = 20
     player_rect = pg.Rect(width / 2, height / 2, player_size, player_size)
 
@@ -45,44 +45,44 @@ def main():
                 player_rect = player_rect.move(0, 50)
                 in_jump = False
 
-        # If SPACE is pressed made the jump.
+        # Si vous appuyez sur SPACE, faites le saut.
         if keys[pg.K_SPACE] and not in_jump:
             player_rect = player_rect.move(0, -50)
             in_jump = True
             jump_tick = 90
 
-        # Spawn a obstacle every seconde just out side of the screen.
-        if obstacle_tick == 3:
+        # Crée un obstacle chaque seconde juste à l'extérieur de l'écran.
+        if obstacle_tick == 3: # ici on détermine le nombre de seconde
 
             obstacle_tick = 0
             obstacle_rect = pg.Rect(width, height / 2, 20, 20)
             obstacle_rect_list.append(obstacle_rect)
 
-        # Update obstacle position and check for colision with the player.
+        # Mise à jour de la position de l'obstacle et vérification de la collision avec le joueur.
         for index, obstacle_rect in enumerate(obstacle_rect_list):
             if obstacle_rect.colliderect(player_rect):
                 print("LOST")
                 return
             obstacle_rect_list[index] = obstacle_rect.move(-1, 0)
 
-        # Draw player on the middle of the screen.
+        # Dessine le joueur au milieu de l’écran.
         pg.draw.rect(screen, (255, 255, 255), player_rect)
 
-        # Draw obstacle.
+        # Dessine un obstacle.
         for obstacle in obstacle_rect_list:
             pg.draw.rect(screen, (255, 0, 0), obstacle)
 
-        # Update display.
+        # Mise à jour de l'affichage.
         screen.blit(screen, (0, 0))
         pg.display.flip()
 
-        # Count tick.
+        # Compter tick.
         if tick > 60:
             tick = 0
             obstacle_tick += 1
         tick += 1
 
-        # Set the game to 60 update per second.
+        # Mettre le jeu à 60 update par seconde.
         clock.tick(60)
 
 
