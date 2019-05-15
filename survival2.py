@@ -1,15 +1,6 @@
 import pygame as pg # au lieu de mettre pygame on met pg pour court et rapide
 
-def main():
-
-    # init pygame, importez chaque module dans pygame.
-    pg.init()
-
-    # Fenêtre de 500 par 400 pixels.
-    width = 500
-    height = 400
-    display_size = [width, height]
-    screen = pg.display.set_mode(display_size)
+def jeu(screen):
 
     # Définir le titre de la fenêtre
     pg.display.set_caption("Jump")
@@ -18,7 +9,7 @@ def main():
 
     # Créer un joueur rect = rectangle
     player_size = 20
-    player_rect = pg.Rect(width / 2, height / 2, player_size, player_size)
+    player_rect = pg.Rect(largeur / 2, hauteur / 2, player_size, player_size)
 
     obstacle_rect_list = []
     tick = 0
@@ -54,7 +45,7 @@ def main():
         if obstacle_tick == 3: # ici on détermine le nombre de seconde
 
             obstacle_tick = 0
-            obstacle_rect = pg.Rect(width, height / 2, 20, 20)
+            obstacle_rect = pg.Rect(largeur, hauteur / 2, 20, 20)
             obstacle_rect_list.append(obstacle_rect)
 
         # Mise à jour de la position de l'obstacle et vérification de la collision avec le joueur.
@@ -113,17 +104,17 @@ def accueil(screen):
         pg.time.Clock().tick(30)
 
 
-def main():
+def main(): #gere tous jeu + acceuil = global mais en mieux 
 
-    pg.init()
-
+    pg.init() # init pygame, importez chaque module dans pygame.
+    # Fenêtre de 500 par 400 pixels.
     largeur = 500
     hauteur = 400
     taille_affichage = [largeur, hauteur]
     screen = pg.display.set_mode(taille_affichage)
 
     accueil(screen)
-
+    jeu(screen)
 
 if __name__ == "__main__":
     main()
