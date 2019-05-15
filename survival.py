@@ -1,24 +1,11 @@
 import pygame as pg # au lieu de mettre pygame on met pg pour court et rapide
 
-def main():
 
-    # init pygame, importez chaque module dans pygame.
-    pg.init()
-
-    # Fenêtre de 500 par 400 pixels.
-    width = 500
-    height = 400
-    display_size = [width, height]
-    screen = pg.display.set_mode(display_size)
-
-    # Définir le titre de la fenêtre
-    pg.display.set_caption("Jump")
-
-    clock = pg.time.Clock()
+def jeu(screen, clock, largeur, hauteur): # on rajoute en argument screen et clock pour les utiliser à partir de main
 
     # Créer un joueur rect = rectangle
     player_size = 20
-    player_rect = pg.Rect(width / 2, height / 2, player_size, player_size)
+    player_rect = pg.Rect(largeur / 2, hauteur / 2, player_size, player_size)
 
     obstacle_rect_list = []
     tick = 0
@@ -54,14 +41,15 @@ def main():
         if obstacle_tick == 3: # ici on détermine le nombre de seconde
 
             obstacle_tick = 0
-            obstacle_rect = pg.Rect(width, height / 2, 20, 20)
+            obstacle_rect = pg.Rect(largeur, hauteur / 2, 20, 20)
             obstacle_rect_list.append(obstacle_rect)
 
         # Mise à jour de la position de l'obstacle et vérification de la collision avec le joueur.
         for index, obstacle_rect in enumerate(obstacle_rect_list):
+
             if obstacle_rect.colliderect(player_rect):
-                print("LOST")
                 return
+
             obstacle_rect_list[index] = obstacle_rect.move(-1, 0)
 
         # Dessine le joueur au milieu de l’écran.
@@ -79,10 +67,67 @@ def main():
         if tick > 60:
             tick = 0
             obstacle_tick += 1
+
         tick += 1
 
         # Mettre le jeu à 60 update par seconde.
         clock.tick(60)
+
+
+def accueil(screen, clock):
+
+    # Remplace ce que avait sur la surface par du noir.
+    screen.fill((0, 0, 0))
+
+    # Charge une image et la converti a la bonne taille.
+    background = pg.image.load("background.jpg").convert()
+
+    # Place l'image sur la surface.
+    screen.blit(background, (0, 0))
+
+    # Met a jour la surface afficher a l'écran.
+    pg.display.flip()
+
+    running = True
+    while running:
+
+        for event in pg.event.get():
+
+            if event.type == pg.QUIT:
+                running = False
+                pg.quit()
+                quit()
+
+            if event.type == pg.KEYDOWN:
+
+                if event.key == pg.K_ESCAPE:
+                    running = False
+                    pg.quit()
+                    quit()
+
+                if event.key == pg.K_RETURN:
+                    return
+
+        clock.tick(30)
+
+
+def main(): #gere tous jeu + acceuil = global mais en mieux 
+
+    pg.init() # init pygame, importez chaque module dans pygame.
+
+    # Fenêtre de 500 par 400 pixels.
+    largeur = 500
+    hauteur = 400
+    taille_affichage = [largeur, hauteur]
+
+    screen = pg.display.set_mode(taille_affichage)
+
+    # Définir le titre de la fenêtre
+    pg.display.set_caption("Jump")
+    clock = pg.time.Clock()
+
+    accueil(screen, clock)
+    jeu(screen, clock, largeur, hauteur)
 
 
 if __name__ == "__main__":
