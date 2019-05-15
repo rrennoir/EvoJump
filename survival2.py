@@ -1,11 +1,8 @@
 import pygame as pg # au lieu de mettre pygame on met pg pour court et rapide
 
-def jeu(screen):
+def jeu(screen, clock, largeur, hauteur): # on rajoute en argument screen et clock pour les utiliser à partir de main
 
-    # Définir le titre de la fenêtre
-    pg.display.set_caption("Jump")
-
-    clock = pg.time.Clock()
+    
 
     # Créer un joueur rect = rectangle
     player_size = 20
@@ -76,7 +73,7 @@ def jeu(screen):
         clock.tick(60)
 
 
-def accueil(screen):
+def accueil(screen, clock, largeur, hauteur):
 
     background = pg.image.load("background.jpg").convert()
     screen.blit(background, (0, 0))
@@ -112,9 +109,13 @@ def main(): #gere tous jeu + acceuil = global mais en mieux
     hauteur = 400
     taille_affichage = [largeur, hauteur]
     screen = pg.display.set_mode(taille_affichage)
+    # Définir le titre de la fenêtre
+    pg.display.set_caption("Jump")
+    clock = pg.time.Clock()
 
-    accueil(screen)
-    jeu(screen)
+
+    accueil(screen, clock, largeur, hauteur)
+    jeu(screen, clock, largeur, hauteur)
 
 if __name__ == "__main__":
     main()
