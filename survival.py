@@ -37,7 +37,7 @@ while continuer:
 
         for event in pygame.event.get():
 
-            #Si l'utilisateur quitte, on met les variables 
+            #Si l'utilisateur quitte, on met les variables
             #de boucle à 0 pour n'en parcourir aucune et fermer
             if event.type == QUIT and event.type == KEYDOWN and event.key == K_ESCAPE:
                 continuer_accueil = 0
@@ -46,7 +46,7 @@ while continuer:
                 #Variable de choix du mode
                 choix = 0
 
-            elif event.type == KEYDOWN:				
+            elif event.type == KEYDOWN:
 
                 if event.key == K_a:
                     continuer_accueil = 0	#On quitte l'accueil
