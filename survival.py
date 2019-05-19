@@ -125,7 +125,7 @@ def main(): #gere tous jeu + acceuil = global mais en mieux
     taille_affichage = [largeur, hauteur]
 
     screen = pg.display.set_mode(taille_affichage)
-
+    pg.display.set_icon(icone)
     # Définir le titre de la fenêtre
     pg.display.set_caption("Jump")
     clock = pg.time.Clock()
