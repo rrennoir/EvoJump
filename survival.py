@@ -1,5 +1,5 @@
 import pygame as pg # au lieu de mettre pygame on met pg pour court et rapide
-
+from random import randint
 
 def jeu(screen, clock, largeur, hauteur): # on rajoute en argument screen et clock pour les utiliser à partir de main
 
@@ -13,6 +13,8 @@ def jeu(screen, clock, largeur, hauteur): # on rajoute en argument screen et clo
     # Créer un obstacle
     obstacle_image = pg.image.load("obstacle.png")
     obstacle_rect = obstacle_image.get_rect(topleft=(largeur, 475))
+
+    next_obstacle = 2 
 
     obstacle_rect_list = []
 
@@ -46,7 +48,8 @@ def jeu(screen, clock, largeur, hauteur): # on rajoute en argument screen et clo
             jump_tick = 90
 
         # Crée un obstacle chaque seconde juste à l'extérieur de l'écran.
-        if obstacle_tick == 2: # ici on détermine le nombre de seconde
+        if obstacle_tick == next_obstacle: # ici on détermine le nombre de seconde
+            next_obstacle = randint(1,5)
             obstacle_rect_list.append(obstacle_rect)
             obstacle_tick = 0
 
