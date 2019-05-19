@@ -8,7 +8,7 @@ def jeu(screen, clock, largeur, hauteur): # on rajoute en argument screen et clo
     # Créer un joueur rect = rectangle
     player= pg.image.load("rex.png")
     player_rect = player.get_rect(topleft=(largeur / 2, hauteur / 2)) #topleft en haut à gauche 
-    #player_size = 20
+    
     obstacle_rect_list = []
     
     tick = 0
