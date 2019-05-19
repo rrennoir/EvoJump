@@ -3,9 +3,11 @@ import pygame as pg # au lieu de mettre pygame on met pg pour court et rapide
 
 def jeu(screen, clock, largeur, hauteur): # on rajoute en argument screen et clock pour les utiliser à partir de main
 
+
+
     # Créer un joueur rect = rectangle
     player= pg.image.load("rex.png")
-    player_rect = player.get_rect(topleft=(largeur / 2, hauteur / 2))
+    player_rect = player.get_rect(topleft=(largeur / 2, hauteur / 2)) #topleft en haut à gauche 
     #player_size = 20
     obstacle_rect_list = []
     
@@ -58,7 +60,7 @@ def jeu(screen, clock, largeur, hauteur): # on rajoute en argument screen et clo
         screen.blit(player, player_rect)
 
         # Dessine un obstacle.
-        for obstacle in obstacle_rect_list:
+        for obstacle_rect in obstacle_rect_list:
             screen.blit(obstacle, obstacle_rect)
 
         # Mise à jour de l'affichage.
