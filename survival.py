@@ -3,12 +3,16 @@ import pygame as pg # au lieu de mettre pygame on met pg pour court et rapide
 
 def jeu(screen, clock, largeur, hauteur): # on rajoute en argument screen et clock pour les utiliser à partir de main
 
+    # créer le fond
+    fond = pg.image.load("fond.jpg").convert()
+
     # Créer un joueur rect = rectangle
     player = pg.image.load("rex.png")
-    player_rect = player.get_rect(topleft=(largeur / 2, hauteur / 2)) #topleft en haut à gauche 
+    player_rect = player.get_rect(topleft=(50, 350)) #topleft en haut à gauche 
 
+    # Créer un obstacle
     obstacle_image = pg.image.load("obstacle.png")
-    obstacle_rect = obstacle_image.get_rect(topleft=(largeur, hauteur / 2))
+    obstacle_rect = obstacle_image.get_rect(topleft=(largeur, 475))
 
     obstacle_rect_list = []
 
@@ -28,21 +32,21 @@ def jeu(screen, clock, largeur, hauteur): # on rajoute en argument screen et clo
                 play = False
                 pg.quit()
                 quit()
-
+#rect pour rectangle sert à délimiter la zone de limage, sa "hit box" pour voir s'il y a collision 
         if in_jump:
             jump_tick -= 1
             if jump_tick == 0:
-                player_rect = player_rect.move(0, 50)
+                player_rect = player_rect.move(0, 200)
                 in_jump = False
 
         # Si vous appuyez sur SPACE, faites le saut.
         if keys[pg.K_SPACE] and not in_jump:
-            player_rect = player_rect.move(0, -50)
+            player_rect = player_rect.move(0, -200)
             in_jump = True
             jump_tick = 90
 
         # Crée un obstacle chaque seconde juste à l'extérieur de l'écran.
-        if obstacle_tick == 3: # ici on détermine le nombre de seconde
+        if obstacle_tick == 2: # ici on détermine le nombre de seconde
             obstacle_rect_list.append(obstacle_rect)
             obstacle_tick = 0
 
@@ -52,12 +56,15 @@ def jeu(screen, clock, largeur, hauteur): # on rajoute en argument screen et clo
             if obstacle_rectangle.colliderect(player_rect):
                 return
 
-            obstacle_rect_list[index] = obstacle_rectangle.move(-1, 0)
+            obstacle_rect_list[index] = obstacle_rectangle.move(-6, 0) 
+            #ici on détermine la position de l'obstacle tant qu'il n'y a pas de collision
+
+        #dessiner le fond
+        screen.blit(fond, (0,0)) #screen.blit pour faire afficher léimage à la position 0.0
 
         # Dessine le joueur au milieu de l’écran.
         screen.blit(player, player_rect)
 
-        print(obstacle_rect_list)
         # Dessine un obstacle.
         for obstacle_rectangle in obstacle_rect_list:
             screen.blit(obstacle_image, obstacle_rectangle)
