@@ -76,11 +76,13 @@ def jeu(screen, clock, largeur, hauteur): # on rajoute en argument screen et clo
 
 def accueil(screen, clock):
 
+    
+
     # Remplace ce que avait sur la surface par du noir.
     screen.fill((0, 0, 0))
 
     # Charge une image et la converti a la bonne taille.
-    background = pg.image.load("background.jpg").convert()
+    background = pg.image.load("menu.jpg").convert()
 
     # Place l'image sur la surface.
     screen.blit(background, (0, 0))
@@ -114,6 +116,8 @@ def accueil(screen, clock):
 def main(): #gere tous jeu + acceuil = global mais en mieux 
 
     pg.init() # init pygame, importez chaque module dans pygame.
+    
+    icone = pg.image.load("icone.jpg")
 
     # Fenêtre de 500 par 400 pixels.
     largeur = 500
