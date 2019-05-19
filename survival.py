@@ -3,14 +3,15 @@ import pygame as pg # au lieu de mettre pygame on met pg pour court et rapide
 
 def jeu(screen, clock, largeur, hauteur): # on rajoute en argument screen et clock pour les utiliser à partir de main
 
-
-
     # Créer un joueur rect = rectangle
-    player= pg.image.load("rex.png")
+    player = pg.image.load("rex.png")
     player_rect = player.get_rect(topleft=(largeur / 2, hauteur / 2)) #topleft en haut à gauche 
-    
+
+    obstacle_image = pg.image.load("obstacle.png")
+    obstacle_rect = obstacle_image.get_rect(topleft=(largeur, hauteur / 2))
+
     obstacle_rect_list = []
-    
+
     tick = 0
     in_jump = False
     jump_tick = 0
@@ -42,26 +43,24 @@ def jeu(screen, clock, largeur, hauteur): # on rajoute en argument screen et clo
 
         # Crée un obstacle chaque seconde juste à l'extérieur de l'écran.
         if obstacle_tick == 3: # ici on détermine le nombre de seconde
-
-            obstacle_tick = 0
-            obstacle=pg.image.load("obstacle.png")
-            obstacle_rect= obstacle.get_rect(topleft=(largeur / 2, hauteur / 2))
             obstacle_rect_list.append(obstacle_rect)
+            obstacle_tick = 0
 
         # Mise à jour de la position de l'obstacle et vérification de la collision avec le joueur.
-        for index, obstacle_rect in enumerate(obstacle_rect_list):
+        for index, obstacle_rectangle in enumerate(obstacle_rect_list):
 
-            if obstacle_rect.colliderect(player_rect):
+            if obstacle_rectangle.colliderect(player_rect):
                 return
 
-            obstacle_rect_list[index] = obstacle_rect.move(-1, 0)
+            obstacle_rect_list[index] = obstacle_rectangle.move(-1, 0)
 
         # Dessine le joueur au milieu de l’écran.
         screen.blit(player, player_rect)
 
+        print(obstacle_rect_list)
         # Dessine un obstacle.
-        for obstacle_rect in obstacle_rect_list:
-            screen.blit(obstacle, obstacle_rect)
+        for obstacle_rectangle in obstacle_rect_list:
+            screen.blit(obstacle_image, obstacle_rectangle)
 
         # Mise à jour de l'affichage.
         screen.blit(screen, (0, 0))
