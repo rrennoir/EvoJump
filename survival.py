@@ -119,7 +119,7 @@ def main(): #gere tous jeu + acceuil = global mais en mieux
     
     icone = pg.image.load("icone.jpg")
 
-    # Fenêtre de 500 par 400 pixels.
+    # Fenêtre de 1200 par 600 pixels.
     largeur = 1200
     hauteur = 600
     taille_affichage = [largeur, hauteur]
