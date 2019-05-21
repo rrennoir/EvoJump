@@ -40,9 +40,7 @@ def obstacle_arrivé ( next_obstacle, obstacle_tick, obstacle_rect_list, obstacl
 
 def création_objet(largeur):
 
-    '''# texte
-    font=pg.font.SysFont("Comic Sans MS", 15)
-    text_rect = font.render(seconds, 0, font)'''
+    font = pg.font.SysFont("Comic Sans MS", 35)
 
     # créer le fond
     fond = pg.image.load("fond.jpg").convert()
@@ -50,20 +48,21 @@ def création_objet(largeur):
     # Créer un joueur rect = rectangle
     player = pg.image.load("rex.png")
     player_rect = player.get_rect(topleft=(50, 350)) #topleft en haut à gauche/ pour sa position
+    player_hitbox = pg.Rect(150, 450, 130, 130)
 
     # Créer un obstacle
     obstacle_image = pg.image.load("obstacle.png")
     obstacle_rect = obstacle_image.get_rect(topleft=(largeur, 475))
 
-    return fond, player, player_rect, obstacle_image, obstacle_rect
+    return fond, player, player_rect, obstacle_image, obstacle_rect, font, player_hitbox
 
 
-def collision(play, obstacle_rect_list, player_rect):
+def collision(play, obstacle_rect_list, player_hitbox):
 
     # Mise à jour de la position de l'obstacle et vérification de la collision avec le joueur.
     for index, obstacle_rectangle in enumerate(obstacle_rect_list):
 
-        if obstacle_rectangle.colliderect(player_rect):
+        if obstacle_rectangle.colliderect(player_hitbox):
             play = False
             return play, obstacle_rect_list
 
@@ -72,7 +71,7 @@ def collision(play, obstacle_rect_list, player_rect):
 
     return play, obstacle_rect_list
 
-def dessiner_image (fond, player, player_rect, obstacle_rect_list, screen, obstacle_image):
+def dessiner_image(fond, player, player_rect, obstacle_rect_list, screen, obstacle_image, font, player_hitbox):
 
     #dessiner le fond
     screen.blit(fond, (0, 0)) #screen.blit pour faire afficher léimage à la position 0.0
@@ -83,9 +82,14 @@ def dessiner_image (fond, player, player_rect, obstacle_rect_list, screen, obsta
     # Dessine un obstacle.
     for obstacle_rectangle in obstacle_rect_list:
         screen.blit(obstacle_image, obstacle_rectangle)
+        pg.draw.rect(screen, (0, 0, 255), obstacle_rectangle, 1)
+        screen.blit(screen, (0, 0))
 
-    '''# Dessine texte avec le chrono
-    screen.blit(text_rect, (1150,10))'''
+    text_rect = font.render(str(pg.time.get_ticks() // 1000), 0, (0, 255, 0), font)
+    screen.blit(text_rect, (0, 0))
+
+    pg.draw.rect(screen, (255, 0, 0), player_hitbox, 1)
+    screen.blit(screen, (0, 0))
 
 
 def jeu(screen, clock, largeur): # on rajoute en argument screen et clock pour les utiliser à partir de main
@@ -93,7 +97,7 @@ def jeu(screen, clock, largeur): # on rajoute en argument screen et clock pour l
     #c'est un simple appel de fonction qui prendre des valeurs en entré,
     # qui les modifies et qui renvois le résultat.
 
-    fond, player, player_rect, obstacle_image, obstacle_rect = création_objet(largeur)
+    fond, player, player_rect, obstacle_image, obstacle_rect, font, player_hitbox = création_objet(largeur)
 
     next_obstacle = 2
 
@@ -112,9 +116,9 @@ def jeu(screen, clock, largeur): # on rajoute en argument screen et clock pour l
 
         obstacle_rect, next_obstacle, obstacle_tick, obstacle_rect_list = obstacle_arrivé(next_obstacle, obstacle_tick, obstacle_rect_list, obstacle_rect)
 
-        play, obstacle_rect_list = collision(play, obstacle_rect_list, player_rect)
+        play, obstacle_rect_list = collision(play, obstacle_rect_list, player_hitbox)
 
-        dessiner_image (fond, player, player_rect, obstacle_rect_list, screen, obstacle_image)
+        dessiner_image(fond, player, player_rect, obstacle_rect_list, screen, obstacle_image, font, player_hitbox)
 
         # Mise à jour de l'affichage.
         screen.blit(screen, (0, 0))
