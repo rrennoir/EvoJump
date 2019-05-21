@@ -27,6 +27,14 @@ def player_rex (play, player_rect, in_jump, jump_tick):
 
     return play, player_rect, in_jump, jump_tick
 
+def obstacle_arrivé ( next_obstacle, obstacle_tick, obstacle_rect_list, obstacle_rect):
+    # Crée un obstacle chaque seconde juste à l'extérieur de l'écran.
+    if obstacle_tick == next_obstacle: # ici on détermine le nombre de seconde
+        next_obstacle = randint(1,4)
+        obstacle_rect_list.append(obstacle_rect)
+        obstacle_tick = 0    
+    return obstacle_rect, next_obstacle, obstacle_tick, obstacle_rect_list
+
 def création_objet (largeur):
 
     '''# texte
@@ -46,10 +54,32 @@ def création_objet (largeur):
 
     return fond, player, player_rect, obstacle_image, obstacle_rect
 
+
+
 def jeu(screen, clock, largeur): # on rajoute en argument screen et clock pour les utiliser à partir de main
+
+    def collision (obstacle_rect_list, player_rect):
+        # Mise à jour de la position de l'obstacle et vérification de la collision avec le joueur.
+        for index, obstacle_rectangle in enumerate(obstacle_rect_list):
+
+            if obstacle_rectangle.colliderect(player_rect):
+                return
+
+            obstacle_rect_list[index] = obstacle_rectangle.move(-11, 0) 
+            #ici on détermine la position de l'obstacle tant qu'il n'y a pas de collision
+        return obstacle_rect_list
+
+
+    #c'est un simple appel de fonction qui prendre des valeurs en entré,
+    # qui les modifies et qui renvois le résultat.
+
+    play, player_rect, in_jump, jump_tick = player_rex(play, player_rect, in_jump, jump_tick)
+
+    obstacle_rect, next_obstacle, obstacle_tick, obstacle_rect_list=obstacle_arrivé ( next_obstacle, obstacle_tick, obstacle_rect_list, obstacle_rect)
 
     fond, player, player_rect, obstacle_image, obstacle_rect = création_objet (largeur)
 
+    obstacle_rect_list = collision (obstacle_rect_list, player_rect)
     next_obstacle = 2
 
     obstacle_rect_list = []
@@ -63,10 +93,7 @@ def jeu(screen, clock, largeur): # on rajoute en argument screen et clock pour l
 
         # seconds = (pg.time.get_ticks())/1000
 
-        #c'est un simple appel de fonction qui prendre des valeurs en entré,
-        # qui les modifies et qui renvois le résultat.
 
-        play, player_rect, in_jump, jump_tick = player_rex(play, player_rect, in_jump, jump_tick)
 
         # Crée un obstacle chaque seconde juste à l'extérieur de l'écran.
         if obstacle_tick == next_obstacle: # ici on détermine le nombre de seconde
@@ -74,14 +101,6 @@ def jeu(screen, clock, largeur): # on rajoute en argument screen et clock pour l
             obstacle_rect_list.append(obstacle_rect)
             obstacle_tick = 0
 
-        # Mise à jour de la position de l'obstacle et vérification de la collision avec le joueur.
-        for index, obstacle_rectangle in enumerate(obstacle_rect_list):
-
-            if obstacle_rectangle.colliderect(player_rect):
-                return
-
-            obstacle_rect_list[index] = obstacle_rectangle.move(-11, 0) 
-            #ici on détermine la position de l'obstacle tant qu'il n'y a pas de collision
 
         #dessiner le fond
         screen.blit(fond, (0,0)) #screen.blit pour faire afficher léimage à la position 0.0
