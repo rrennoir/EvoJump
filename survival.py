@@ -40,7 +40,7 @@ def obstacle_arrivé ( next_obstacle, obstacle_tick, obstacle_rect_list, obstacl
 
 def création_objet(largeur):
 
-    font = pg.font.SysFont("Comic Sans MS", 35)
+    font = pg.font.SysFont("Comic Sans MS", 35) #ici on créé la police, on la choisi + taille
 
     # créer le fond
     fond = pg.image.load("fond.jpg").convert()
@@ -48,22 +48,23 @@ def création_objet(largeur):
     # Créer un joueur rect = rectangle
     player = pg.image.load("rex.png")
     player_rect = player.get_rect(topleft=(50, 350)) #topleft en haut à gauche/ pour sa position
-    player_hitbox = pg.Rect(150, 450, 130, 130)
+    
 
     # Créer un obstacle
     obstacle_image = pg.image.load("obstacle.png")
     obstacle_rect = obstacle_image.get_rect(topleft=(largeur, 475))
 
-    return fond, player, player_rect, obstacle_image, obstacle_rect, font, player_hitbox
+    return fond, player, player_rect, obstacle_image, obstacle_rect, font
 
 
-def collision(play, obstacle_rect_list, player_hitbox):
+def collision(play, obstacle_rect_list, player_rect):
 
     # Mise à jour de la position de l'obstacle et vérification de la collision avec le joueur.
     for index, obstacle_rectangle in enumerate(obstacle_rect_list):
 
-        if obstacle_rectangle.colliderect(player_hitbox):
+        if obstacle_rectangle.colliderect(player_rect):
             play = False
+
             return play, obstacle_rect_list
 
         obstacle_rect_list[index] = obstacle_rectangle.move(-11, 0) 
@@ -71,10 +72,10 @@ def collision(play, obstacle_rect_list, player_hitbox):
 
     return play, obstacle_rect_list
 
-def dessiner_image(fond, player, player_rect, obstacle_rect_list, screen, obstacle_image, font, player_hitbox):
+def dessiner_image(fond, player, player_rect, obstacle_rect_list, screen, obstacle_image, font ):
 
     #dessiner le fond
-    screen.blit(fond, (0, 0)) #screen.blit pour faire afficher léimage à la position 0.0
+    screen.blit(fond, (0, 0)) #screen.blit pour faire afficher l'image à la position 0.0
 
     # Dessine le joueur au milieu de l’écran.
     screen.blit(player, player_rect)
@@ -82,14 +83,9 @@ def dessiner_image(fond, player, player_rect, obstacle_rect_list, screen, obstac
     # Dessine un obstacle.
     for obstacle_rectangle in obstacle_rect_list:
         screen.blit(obstacle_image, obstacle_rectangle)
-        pg.draw.rect(screen, (0, 0, 255), obstacle_rectangle, 1)
-        screen.blit(screen, (0, 0))
 
-    text_rect = font.render(str(pg.time.get_ticks() // 1000), 0, (0, 255, 0), font)
+    text_rect = font.render(str(pg.time.get_ticks() // 1000), 0, (29, 29, 29), font)
     screen.blit(text_rect, (0, 0))
-
-    pg.draw.rect(screen, (255, 0, 0), player_hitbox, 1)
-    screen.blit(screen, (0, 0))
 
 
 def jeu(screen, clock, largeur): # on rajoute en argument screen et clock pour les utiliser à partir de main
@@ -97,7 +93,7 @@ def jeu(screen, clock, largeur): # on rajoute en argument screen et clock pour l
     #c'est un simple appel de fonction qui prend des valeurs en entré(les arguments),
     # qui les/en modifies et qui (les) renvois le résultat.
 
-    fond, player, player_rect, obstacle_image, obstacle_rect, font, player_hitbox = création_objet(largeur)
+    fond, player, player_rect, obstacle_image, obstacle_rect, font = création_objet(largeur)
 
     next_obstacle = 2
 
@@ -110,17 +106,15 @@ def jeu(screen, clock, largeur): # on rajoute en argument screen et clock pour l
     play = True
     while play:
 
-        # seconds = (pg.time.get_ticks())/1000
-
         #c'est un simple appel de fonction qui prend des valeurs en entré,
         # qui les modifies et qui renvois le résultat.
         play, player_rect, in_jump, jump_tick = player_rex(play, player_rect, in_jump, jump_tick)
 
         obstacle_rect, next_obstacle, obstacle_tick, obstacle_rect_list = obstacle_arrivé(next_obstacle, obstacle_tick, obstacle_rect_list, obstacle_rect)
 
-        play, obstacle_rect_list = collision(play, obstacle_rect_list, player_hitbox)
+        play, obstacle_rect_list = collision(play, obstacle_rect_list, player_rect)
 
-        dessiner_image(fond, player, player_rect, obstacle_rect_list, screen, obstacle_image, font, player_hitbox)
+        dessiner_image(fond, player, player_rect, obstacle_rect_list, screen, obstacle_image, font)
 
         # Mise à jour de l'affichage.
         screen.blit(screen, (0, 0))
