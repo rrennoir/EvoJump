@@ -27,7 +27,7 @@ def player_rex (play, player_rect, in_jump, jump_tick):
 
     return play, player_rect, in_jump, jump_tick
 
-def création_objet (fond, player, player_rect, obstacle_image, obstacle_rect):
+def création_objet (largeur):
 
     '''# texte
     font=pg.font.SysFont("Comic Sans MS", 15)
@@ -46,11 +46,11 @@ def création_objet (fond, player, player_rect, obstacle_image, obstacle_rect):
 
     return fond, player, player_rect, obstacle_image, obstacle_rect
 
-def jeu(screen, clock, largeur, hauteur): # on rajoute en argument screen et clock pour les utiliser à partir de main
+def jeu(screen, clock, largeur): # on rajoute en argument screen et clock pour les utiliser à partir de main
 
-    
+    fond, player, player_rect, obstacle_image, obstacle_rect = création_objet (largeur)
 
-    next_obstacle = 2 
+    next_obstacle = 2
 
     obstacle_rect_list = []
 
@@ -60,16 +60,14 @@ def jeu(screen, clock, largeur, hauteur): # on rajoute en argument screen et clo
     obstacle_tick = 0
     play = True
     while play:
-        
-        '''seconds = (pg.time.get_ticks())/1000 '''
 
-        #c'est un simple appel de fonction qui prendre des valeurs en entré, qui les modifies et qui renvois le résultat 
+        # seconds = (pg.time.get_ticks())/1000
 
-        play, player_rect, in_jump, jump_tick = player_rex (play, player_rect, in_jump, jump_tick)
+        #c'est un simple appel de fonction qui prendre des valeurs en entré,
+        # qui les modifies et qui renvois le résultat.
 
-        fond, player, player_rect, obstacle_image, obstacle_rect = création_objet (fond, player, player_rect, obstacle_image, obstacle_rect)
+        play, player_rect, in_jump, jump_tick = player_rex(play, player_rect, in_jump, jump_tick)
 
-        
         # Crée un obstacle chaque seconde juste à l'extérieur de l'écran.
         if obstacle_tick == next_obstacle: # ici on détermine le nombre de seconde
             next_obstacle = randint(1,4)
@@ -114,8 +112,6 @@ def jeu(screen, clock, largeur, hauteur): # on rajoute en argument screen et clo
 
 
 def accueil(screen, clock):
-
-    
 
     # Remplace ce que avait sur la surface par du noir.
     screen.fill((0, 0, 0))
@@ -170,7 +166,9 @@ def main(): #gere tous jeu + acceuil = global mais en mieux
     clock = pg.time.Clock()
 
     accueil(screen, clock)
-    jeu(screen, clock, largeur, hauteur)
+    jeu(screen, clock, largeur)
+
+    pg.quit()
 
 
 if __name__ == "__main__":
