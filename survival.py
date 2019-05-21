@@ -3,12 +3,16 @@ from random import randint
 
 def jeu(screen, clock, largeur, hauteur): # on rajoute en argument screen et clock pour les utiliser à partir de main
 
+    '''# texte
+    font=pg.font.SysFont("Comic Sans MS", 15)
+    text_rect = font.render(seconds, 0, font)'''
+
     # créer le fond
     fond = pg.image.load("fond.jpg").convert()
 
     # Créer un joueur rect = rectangle
     player = pg.image.load("rex.png")
-    player_rect = player.get_rect(topleft=(50, 350)) #topleft en haut à gauche 
+    player_rect = player.get_rect(topleft=(50, 350)) #topleft en haut à gauche/ pour sa position
 
     # Créer un obstacle
     obstacle_image = pg.image.load("obstacle.png")
@@ -24,8 +28,8 @@ def jeu(screen, clock, largeur, hauteur): # on rajoute en argument screen et clo
     obstacle_tick = 0
     play = True
     while play:
-
-        screen.fill((0, 0, 0))
+        
+        '''seconds = (pg.time.get_ticks())/1000 '''
 
         keys = pg.key.get_pressed()
         for event in pg.event.get():
@@ -34,7 +38,7 @@ def jeu(screen, clock, largeur, hauteur): # on rajoute en argument screen et clo
                 play = False
                 pg.quit()
                 quit()
-#rect pour rectangle sert à délimiter la zone de limage, sa "hit box" pour voir s'il y a collision 
+    #rect pour rectangle sert à délimiter la zone de limage, sa "hit box" pour voir s'il y a collision 
         if in_jump:
             jump_tick -= 1
             if jump_tick == 0:
@@ -45,11 +49,11 @@ def jeu(screen, clock, largeur, hauteur): # on rajoute en argument screen et clo
         if keys[pg.K_SPACE] and not in_jump:
             player_rect = player_rect.move(0, -200)
             in_jump = True
-            jump_tick = 90
+            jump_tick = 50
 
         # Crée un obstacle chaque seconde juste à l'extérieur de l'écran.
         if obstacle_tick == next_obstacle: # ici on détermine le nombre de seconde
-            next_obstacle = randint(1,5)
+            next_obstacle = randint(1,4)
             obstacle_rect_list.append(obstacle_rect)
             obstacle_tick = 0
 
@@ -59,7 +63,7 @@ def jeu(screen, clock, largeur, hauteur): # on rajoute en argument screen et clo
             if obstacle_rectangle.colliderect(player_rect):
                 return
 
-            obstacle_rect_list[index] = obstacle_rectangle.move(-6, 0) 
+            obstacle_rect_list[index] = obstacle_rectangle.move(-11, 0) 
             #ici on détermine la position de l'obstacle tant qu'il n'y a pas de collision
 
         #dessiner le fond
@@ -71,6 +75,9 @@ def jeu(screen, clock, largeur, hauteur): # on rajoute en argument screen et clo
         # Dessine un obstacle.
         for obstacle_rectangle in obstacle_rect_list:
             screen.blit(obstacle_image, obstacle_rectangle)
+
+        '''# Dessine texte avec le chrono
+        screen.blit(text_rect, (1150,10))'''
 
         # Mise à jour de l'affichage.
         screen.blit(screen, (0, 0))
@@ -115,12 +122,12 @@ def accueil(screen, clock):
 
             if event.type == pg.KEYDOWN:
 
-                if event.key == pg.K_ESCAPE:
+                if event.key == pg.K_ESCAPE: #pour quitter 
                     running = False
                     pg.quit()
                     quit()
 
-                if event.key == pg.K_RETURN:
+                if event.key == pg.K_RETURN: #enter
                     return
 
         clock.tick(30)
@@ -140,7 +147,7 @@ def main(): #gere tous jeu + acceuil = global mais en mieux
     screen = pg.display.set_mode(taille_affichage)
     pg.display.set_icon(icone)
     # Définir le titre de la fenêtre
-    pg.display.set_caption("Jump")
+    pg.display.set_caption("Jump.Rex.2D")
     clock = pg.time.Clock()
 
     accueil(screen, clock)
