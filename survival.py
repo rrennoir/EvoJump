@@ -1,7 +1,33 @@
 import pygame as pg # au lieu de mettre pygame on met pg pour court et rapide
 from random import randint
 
-def jeu(screen, clock, largeur, hauteur): # on rajoute en argument screen et clock pour les utiliser à partir de main
+# toute mes fonctions pour faciliter la lecture du jeu
+    
+def player_rex (play, player_rect, in_jump, jump_tick):
+
+    keys = pg.key.get_pressed()
+    for event in pg.event.get():
+
+        if event.type == pg.QUIT:
+            play = False
+            pg.quit()
+            quit()
+    #rect pour rectangle sert à délimiter la zone de limage, sa "hit box" pour voir s'il y a collision 
+    if in_jump:
+        jump_tick -= 1
+        if jump_tick == 0:
+            player_rect = player_rect.move(0, 200)
+            in_jump = False
+
+        # Si vous appuyez sur SPACE, faites le saut.
+    if keys[pg.K_SPACE] and not in_jump:
+        player_rect = player_rect.move(0, -200)
+        in_jump = True
+        jump_tick = 50
+
+    return play, player_rect, in_jump, jump_tick
+
+def création_objet (fond, player, player_rect, obstacle_image, obstacle_rect):
 
     '''# texte
     font=pg.font.SysFont("Comic Sans MS", 15)
@@ -18,6 +44,12 @@ def jeu(screen, clock, largeur, hauteur): # on rajoute en argument screen et clo
     obstacle_image = pg.image.load("obstacle.png")
     obstacle_rect = obstacle_image.get_rect(topleft=(largeur, 475))
 
+    return fond, player, player_rect, obstacle_image, obstacle_rect
+
+def jeu(screen, clock, largeur, hauteur): # on rajoute en argument screen et clock pour les utiliser à partir de main
+
+    
+
     next_obstacle = 2 
 
     obstacle_rect_list = []
@@ -31,26 +63,13 @@ def jeu(screen, clock, largeur, hauteur): # on rajoute en argument screen et clo
         
         '''seconds = (pg.time.get_ticks())/1000 '''
 
-        keys = pg.key.get_pressed()
-        for event in pg.event.get():
+        #c'est un simple appel de fonction qui prendre des valeurs en entré, qui les modifies et qui renvois le résultat 
 
-            if event.type == pg.QUIT:
-                play = False
-                pg.quit()
-                quit()
-    #rect pour rectangle sert à délimiter la zone de limage, sa "hit box" pour voir s'il y a collision 
-        if in_jump:
-            jump_tick -= 1
-            if jump_tick == 0:
-                player_rect = player_rect.move(0, 200)
-                in_jump = False
+        play, player_rect, in_jump, jump_tick = player_rex (play, player_rect, in_jump, jump_tick)
 
-        # Si vous appuyez sur SPACE, faites le saut.
-        if keys[pg.K_SPACE] and not in_jump:
-            player_rect = player_rect.move(0, -200)
-            in_jump = True
-            jump_tick = 50
+        fond, player, player_rect, obstacle_image, obstacle_rect = création_objet (fond, player, player_rect, obstacle_image, obstacle_rect)
 
+        
         # Crée un obstacle chaque seconde juste à l'extérieur de l'écran.
         if obstacle_tick == next_obstacle: # ici on détermine le nombre de seconde
             next_obstacle = randint(1,4)
