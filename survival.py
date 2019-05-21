@@ -90,8 +90,8 @@ def dessiner_image (fond, player, player_rect, obstacle_rect_list, screen, obsta
 
 def jeu(screen, clock, largeur): # on rajoute en argument screen et clock pour les utiliser à partir de main
 
-    #c'est un simple appel de fonction qui prendre des valeurs en entré,
-    # qui les modifies et qui renvois le résultat.
+    #c'est un simple appel de fonction qui prend des valeurs en entré(les arguments),
+    # qui les/en modifies et qui (les) renvois le résultat.
 
     fond, player, player_rect, obstacle_image, obstacle_rect = création_objet(largeur)
 
@@ -108,6 +108,8 @@ def jeu(screen, clock, largeur): # on rajoute en argument screen et clock pour l
 
         # seconds = (pg.time.get_ticks())/1000
 
+        #c'est un simple appel de fonction qui prend des valeurs en entré,
+        # qui les modifies et qui renvois le résultat.
         play, player_rect, in_jump, jump_tick = player_rex(play, player_rect, in_jump, jump_tick)
 
         obstacle_rect, next_obstacle, obstacle_tick, obstacle_rect_list = obstacle_arrivé(next_obstacle, obstacle_tick, obstacle_rect_list, obstacle_rect)
