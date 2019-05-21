@@ -72,6 +72,21 @@ def collision(play, obstacle_rect_list, player_rect):
 
     return play, obstacle_rect_list
 
+def dessiner_image (fond, player, player_rect, obstacle_rect_list, screen, obstacle_image):
+
+    #dessiner le fond
+    screen.blit(fond, (0, 0)) #screen.blit pour faire afficher léimage à la position 0.0
+
+    # Dessine le joueur au milieu de l’écran.
+    screen.blit(player, player_rect)
+
+    # Dessine un obstacle.
+    for obstacle_rectangle in obstacle_rect_list:
+        screen.blit(obstacle_image, obstacle_rectangle)
+
+    '''# Dessine texte avec le chrono
+    screen.blit(text_rect, (1150,10))'''
+
 
 def jeu(screen, clock, largeur): # on rajoute en argument screen et clock pour les utiliser à partir de main
 
@@ -79,6 +94,7 @@ def jeu(screen, clock, largeur): # on rajoute en argument screen et clock pour l
     # qui les modifies et qui renvois le résultat.
 
     fond, player, player_rect, obstacle_image, obstacle_rect = création_objet(largeur)
+
     next_obstacle = 2
 
     obstacle_rect_list = []
@@ -94,28 +110,11 @@ def jeu(screen, clock, largeur): # on rajoute en argument screen et clock pour l
 
         play, player_rect, in_jump, jump_tick = player_rex(play, player_rect, in_jump, jump_tick)
 
-        # Crée un obstacle chaque seconde juste à l'extérieur de l'écran.
-        if obstacle_tick == next_obstacle: # ici on détermine le nombre de seconde
-            next_obstacle = randint(1, 4)
-            obstacle_rect_list.append(obstacle_rect)
-            obstacle_tick = 0
-
         obstacle_rect, next_obstacle, obstacle_tick, obstacle_rect_list = obstacle_arrivé(next_obstacle, obstacle_tick, obstacle_rect_list, obstacle_rect)
 
         play, obstacle_rect_list = collision(play, obstacle_rect_list, player_rect)
 
-        #dessiner le fond
-        screen.blit(fond, (0, 0)) #screen.blit pour faire afficher léimage à la position 0.0
-
-        # Dessine le joueur au milieu de l’écran.
-        screen.blit(player, player_rect)
-
-        # Dessine un obstacle.
-        for obstacle_rectangle in obstacle_rect_list:
-            screen.blit(obstacle_image, obstacle_rectangle)
-
-        '''# Dessine texte avec le chrono
-        screen.blit(text_rect, (1150,10))'''
+        dessiner_image (fond, player, player_rect, obstacle_rect_list, screen, obstacle_image)
 
         # Mise à jour de l'affichage.
         screen.blit(screen, (0, 0))
