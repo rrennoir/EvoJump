@@ -2,8 +2,7 @@ import pygame as pg # au lieu de mettre pygame on met pg pour court et rapide
 from random import randint
 
 # toute mes fonctions pour faciliter la lecture du jeu
-    
-def player_rex (play, player_rect, in_jump, jump_tick):
+def player_rex(play, player_rect, player_hitbox, in_jump, jump_tick):
 
     keys = pg.key.get_pressed()
     for event in pg.event.get():
@@ -18,29 +17,29 @@ def player_rex (play, player_rect, in_jump, jump_tick):
         jump_tick -= 1
         if jump_tick == 0:
             player_rect = player_rect.move(0, 200)
+            player_hitbox = player_hitbox.move(0, 200)
             in_jump = False
 
-        # Si vous appuyez sur SPACE, faites le saut.
+    # Si vous appuyez sur SPACE, faites le saut.
     if keys[pg.K_SPACE] and not in_jump:
         player_rect = player_rect.move(0, -200)
+        player_hitbox = player_hitbox.move(0, -200)
         in_jump = True
         jump_tick = 50
 
-    return play, player_rect, in_jump, jump_tick
+    return play, player_rect, player_hitbox, in_jump, jump_tick
 
 
-def obstacle_arrivé ( next_obstacle, obstacle_tick, obstacle_rect_list, obstacle_rect):
+def obstacle_arrivé(next_obstacle, obstacle_tick, obstacle_rect_list, obstacle_rect):
     # Crée un obstacle chaque seconde juste à l'extérieur de l'écran.
     if obstacle_tick == next_obstacle: # ici on détermine le nombre de seconde
         next_obstacle = randint(1, 4)
         obstacle_rect_list.append(obstacle_rect)
-        obstacle_tick = 0 
+        obstacle_tick = 0
     return obstacle_rect, next_obstacle, obstacle_tick, obstacle_rect_list
 
 
 def création_objet(largeur):
-
-    font = pg.font.SysFont("Comic Sans MS", 35) #ici on créé la police, on la choisi + taille
 
     # créer le fond
     fond = pg.image.load("fond.jpg").convert()
@@ -48,21 +47,21 @@ def création_objet(largeur):
     # Créer un joueur rect = rectangle
     player = pg.image.load("rex.png")
     player_rect = player.get_rect(topleft=(50, 350)) #topleft en haut à gauche/ pour sa position
-    
+    player_hitbox = pg.Rect(150, 450, 130, 130)
 
     # Créer un obstacle
     obstacle_image = pg.image.load("obstacle.png")
     obstacle_rect = obstacle_image.get_rect(topleft=(largeur, 475))
 
-    return fond, player, player_rect, obstacle_image, obstacle_rect, font
+    return fond, player, player_rect, obstacle_image, obstacle_rect, player_hitbox
 
 
-def collision(play, obstacle_rect_list, player_rect):
+def collision(play, obstacle_rect_list, player_hitbox):
 
     # Mise à jour de la position de l'obstacle et vérification de la collision avec le joueur.
     for index, obstacle_rectangle in enumerate(obstacle_rect_list):
 
-        if obstacle_rectangle.colliderect(player_rect):
+        if obstacle_rectangle.colliderect(player_hitbox):
             play = False
 
             return play, obstacle_rect_list
@@ -72,7 +71,7 @@ def collision(play, obstacle_rect_list, player_rect):
 
     return play, obstacle_rect_list
 
-def dessiner_image(fond, player, player_rect, obstacle_rect_list, screen, obstacle_image, font ):
+def dessiner_image(fond, player, player_rect, obstacle_rect_list, screen, obstacle_image, temps, font):
 
     #dessiner le fond
     screen.blit(fond, (0, 0)) #screen.blit pour faire afficher l'image à la position 0.0
@@ -84,16 +83,16 @@ def dessiner_image(fond, player, player_rect, obstacle_rect_list, screen, obstac
     for obstacle_rectangle in obstacle_rect_list:
         screen.blit(obstacle_image, obstacle_rectangle)
 
-    text_rect = font.render(str(pg.time.get_ticks() // 1000), 0, (29, 29, 29), font)
+    text_rect = font.render(str(temps // 1000), 0, (29, 29, 29), font)
     screen.blit(text_rect, (0, 0))
 
 
-def jeu(screen, clock, largeur): # on rajoute en argument screen et clock pour les utiliser à partir de main
+def jeu(screen, clock, largeur, font): # on rajoute en argument screen et clock pour les utiliser à partir de main
 
     #c'est un simple appel de fonction qui prend des valeurs en entré(les arguments),
     # qui les/en modifies et qui (les) renvois le résultat.
 
-    fond, player, player_rect, obstacle_image, obstacle_rect, font = création_objet(largeur)
+    fond, player, player_rect, obstacle_image, obstacle_rect, player_hitbox = création_objet(largeur)
 
     next_obstacle = 2
 
@@ -104,17 +103,20 @@ def jeu(screen, clock, largeur): # on rajoute en argument screen et clock pour l
     jump_tick = 0
     obstacle_tick = 0
     play = True
+    temps = 0
     while play:
 
         #c'est un simple appel de fonction qui prend des valeurs en entré,
         # qui les modifies et qui renvois le résultat.
-        play, player_rect, in_jump, jump_tick = player_rex(play, player_rect, in_jump, jump_tick)
+        play, player_rect, player_hitbox, in_jump, jump_tick = player_rex(play, player_rect, player_hitbox, in_jump, jump_tick)
 
         obstacle_rect, next_obstacle, obstacle_tick, obstacle_rect_list = obstacle_arrivé(next_obstacle, obstacle_tick, obstacle_rect_list, obstacle_rect)
 
-        play, obstacle_rect_list = collision(play, obstacle_rect_list, player_rect)
+        play, obstacle_rect_list = collision(play, obstacle_rect_list, player_hitbox)
 
-        dessiner_image(fond, player, player_rect, obstacle_rect_list, screen, obstacle_image, font)
+        temps = pg.time.get_ticks()
+
+        dessiner_image(fond, player, player_rect, obstacle_rect_list, screen, obstacle_image, temps, font)
 
         # Mise à jour de l'affichage.
         screen.blit(screen, (0, 0))
@@ -130,8 +132,10 @@ def jeu(screen, clock, largeur): # on rajoute en argument screen et clock pour l
         # Mettre le jeu à 60 update par seconde.
         clock.tick(60)
 
+    return temps
 
-def accueil(screen, clock):
+
+def accueil(screen, clock, font):
 
     # Remplace ce que avait sur la surface par du noir.
     screen.fill((0, 0, 0))
@@ -167,6 +171,29 @@ def accueil(screen, clock):
 
         clock.tick(30)
 
+def end_screen(screen, score, font):
+
+    screen.fill((0, 0, 0))
+    background = pg.image.load("fond.jpg").convert()
+    screen.blit(background, (0, 0))
+
+    text_rect = font.render("score: %s" % str(score // 1000), 0, (29, 29, 29), font)
+    screen.blit(text_rect, (0, 0))
+
+    pg.display.flip()
+
+    waiting = True
+    while waiting:
+        print("waiting")
+        keys = pg.key.get_pressed()
+        for event in pg.event.get():
+
+            if event.type == pg.QUIT:
+                return False
+
+        if keys[pg.K_RETURN]:
+            return True
+
 
 def main(): #gere tous jeu + acceuil = global mais en mieux 
 
@@ -183,10 +210,17 @@ def main(): #gere tous jeu + acceuil = global mais en mieux
     pg.display.set_icon(icone)
     # Définir le titre de la fenêtre
     pg.display.set_caption("Jump.Rex.2D")
+
+    font = pg.font.SysFont("Comic Sans MS", 35) #ici on créé la police, on la choisi + taille
     clock = pg.time.Clock()
 
-    accueil(screen, clock)
-    jeu(screen, clock, largeur)
+    accueil(screen, clock, font)
+
+    playing = True
+    while playing:
+
+        score = jeu(screen, clock, largeur, font)
+        playing = end_screen(screen, score, font)
 
     pg.quit()
 
