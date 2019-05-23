@@ -18,16 +18,32 @@ def player_rex(game_data):
     if game_data["player"]["in_jump"]:
 
         game_data["player"]["tick"] -= 1
-        if game_data["player"]["tick"] == 0:
 
-            game_data["player"]["rect"] = game_data["player"]["rect"].move(0, 200)
-            game_data["player"]["hitbox"] = game_data["player"]["hitbox"].move(0, 200)
+        if game_data["player"]["tick"] > 40 and game_data["player"]["tick"] < 50:
+            print(game_data["player"]["tick"])
+            game_data["player"]["rect"] = game_data["player"]["rect"].move(0, -13)
+            game_data["player"]["hitbox"] = game_data["player"]["hitbox"].move(0, -13)
+
+        elif game_data["player"]["tick"] > 30 and game_data["player"]["tick"] < 40:
+            print(game_data["player"]["tick"])
+            game_data["player"]["rect"] = game_data["player"]["rect"].move(0, -8)
+            game_data["player"]["hitbox"] = game_data["player"]["hitbox"].move(0, -8)
+
+        elif game_data["player"]["tick"] > 10 and game_data["player"]["tick"] < 20:
+            print(game_data["player"]["tick"])
+            game_data["player"]["rect"] = game_data["player"]["rect"].move(0, 8)
+            game_data["player"]["hitbox"] = game_data["player"]["hitbox"].move(0, 8)
+
+        elif game_data["player"]["tick"] > 0 and game_data["player"]["tick"] < 10:
+            print(game_data["player"]["tick"])
+            game_data["player"]["rect"] = game_data["player"]["rect"].move(0, 13)
+            game_data["player"]["hitbox"] = game_data["player"]["hitbox"].move(0, 13)
+
+        if game_data["player"]["tick"] == 0:
             game_data["player"]["in_jump"] = False
 
     # Si vous appuyez sur SPACE, faites le saut.
     if keys[pg.K_SPACE] and not game_data["player"]["in_jump"]:
-        game_data["player"]["rect"] = game_data["player"]["rect"].move(0, -200)
-        game_data["player"]["hitbox"] = game_data["player"]["hitbox"].move(0, -200)
         game_data["player"]["in_jump"] = True
         game_data["player"]["tick"] = 50
 
