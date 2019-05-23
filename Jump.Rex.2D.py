@@ -1,4 +1,4 @@
-import pygame as pg # au lieu de mettre pygame on met pg pour court et rapide
+import pygame as pg # au lieu de mettre pygame on met pg plus court et rapide
 from random import randint
 
 # toute mes fonctions pour faciliter la lecture du jeu
@@ -29,7 +29,6 @@ def player_rex(play, player_rect, player_hitbox, in_jump, jump_tick):
 
     return play, player_rect, player_hitbox, in_jump, jump_tick
 
-
 def obstacle_arrivé(next_obstacle, obstacle_tick, obstacle_rect_list, obstacle_rect):
     # Crée un obstacle chaque seconde juste à l'extérieur de l'écran.
     if obstacle_tick == next_obstacle: # ici on détermine le nombre de seconde
@@ -37,7 +36,6 @@ def obstacle_arrivé(next_obstacle, obstacle_tick, obstacle_rect_list, obstacle_
         obstacle_rect_list.append(obstacle_rect)
         obstacle_tick = 0
     return obstacle_rect, next_obstacle, obstacle_tick, obstacle_rect_list
-
 
 def création_objet(largeur):
 
@@ -55,7 +53,6 @@ def création_objet(largeur):
 
     return fond, player, player_rect, obstacle_image, obstacle_rect, player_hitbox
 
-
 def collision(play, obstacle_rect_list, player_hitbox):
 
     # Mise à jour de la position de l'obstacle et vérification de la collision avec le joueur.
@@ -72,7 +69,7 @@ def collision(play, obstacle_rect_list, player_hitbox):
     return play, obstacle_rect_list
 
 def dessiner_image(fond, player, player_rect, obstacle_rect_list, screen, obstacle_image, temps, font):
-
+    #ppour positionner un objet sur l'écran, nous avons besoin de la fonction blit()
     #dessiner le fond
     screen.blit(fond, (0, 0)) #screen.blit pour faire afficher l'image à la position 0.0
 
@@ -83,9 +80,8 @@ def dessiner_image(fond, player, player_rect, obstacle_rect_list, screen, obstac
     for obstacle_rectangle in obstacle_rect_list:
         screen.blit(obstacle_image, obstacle_rectangle)
 
-    text_rect = font.render(str(temps), 0, (29, 29, 29), font)
+    text_rect = font.render(str(temps), 0, (29, 29, 29), font) # str pour mettre en string le temps
     screen.blit(text_rect, (0, 0))
-
 
 def jeu(screen, clock, largeur, font): # on rajoute en argument screen et clock pour les utiliser à partir de main
 
@@ -133,17 +129,16 @@ def jeu(screen, clock, largeur, font): # on rajoute en argument screen et clock 
 
     return temps
 
-
 def accueil(screen, clock, font):
 
     # Remplace ce que avait sur la surface par du noir.
     screen.fill((0, 0, 0))
 
     # Charge une image et la converti a la bonne taille.
-    background = pg.image.load("menu.jpg").convert()
+    fond_fin = pg.image.load("menu.jpg").convert()
 
     # Place l'image sur la surface.
-    screen.blit(background, (0, 0))
+    screen.blit(fond_fin, (0, 0))
 
     # Met a jour la surface afficher a l'écran.
     pg.display.flip()
@@ -153,46 +148,44 @@ def accueil(screen, clock, font):
 
         for event in pg.event.get():
 
-            if event.type == pg.QUIT:
+            if event.type == pg.QUIT: # quitter avec la croix rouge en haut à doite
                 running = False
                 pg.quit()
                 quit()
 
             if event.type == pg.KEYDOWN:
 
-                if event.key == pg.K_ESCAPE: #pour quitter 
+                if event.key == pg.K_ESCAPE: # ou échap pour quitter 
                     running = False
                     pg.quit()
                     quit()
 
-                if event.key == pg.K_RETURN: #enter
+                if event.key == pg.K_RETURN: # touche enter pour jouer
                     return
 
         clock.tick(30)
 
-def end_screen(screen, score, font):
+def ecran_fin(screen, score, font):
 
     screen.fill((0, 0, 0))
-    background = pg.image.load("fond.jpg").convert()
-    screen.blit(background, (0, 0))
+    fond_fin = pg.image.load("ecran_fin.jpg").convert()
+    screen.blit(fond_fin, (0, 0))
 
-    text_rect = font.render("score: %s" % str(score), 0, (29, 29, 29), font)
+    text_rect = font.render("score: %s" % str(score), 0, (29, 29, 29), font) #
     screen.blit(text_rect, (0, 0))
 
     pg.display.flip()
 
-    waiting = True
-    while waiting:
-        print("waiting")
+    att_touche = True # ici on attend que le joueur appuie sur une touche pour relancer une game
+    while att_touche:
         keys = pg.key.get_pressed()
         for event in pg.event.get():
 
-            if event.type == pg.QUIT:
+            if event.type == pg.QUIT: # soit il peut quitter 
                 return False
 
-        if keys[pg.K_RETURN]:
+        if keys[pg.K_RETURN]: # soit comme depuis le menu il peut lancer un game en apuyant sur ENTRER
             return True
-
 
 def main(): #gere tous jeu + acceuil = global mais en mieux 
 
@@ -219,7 +212,7 @@ def main(): #gere tous jeu + acceuil = global mais en mieux
     while playing:
 
         score = jeu(screen, clock, largeur, font)
-        playing = end_screen(screen, score, font)
+        playing = ecran_fin(screen, score, font)
 
     pg.quit()
 
